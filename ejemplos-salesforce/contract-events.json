@@ -1,0 +1,32 @@
+[
+  {
+    "eventId": "SF_CONT_001_2025091701",
+    "eventType": "CONTRACT_CREATED",
+    "customerId": "0031700000ABC123",
+    "accountId": "0011700000DEF456",
+    "contractId": "CONT-2025-091701-001",
+    "timestamp": "2025-09-17T10:00:00Z",
+    "sourceSystem": "SALESFORCE",
+    "eventData": "{\"contractNumber\":\"CONT-2025-091701-001\",\"customerName\":\"María García\",\"contractType\":\"POSTPAGO_INDIVIDUAL\",\"plan\":\"Plan Familiar 50GB\",\"monthlyFee\":49.99,\"currency\":\"USD\",\"duration\":24,\"startDate\":\"2025-09-17\",\"endDate\":\"2027-09-17\",\"status\":\"PENDING_SIGNATURE\",\"channel\":\"ONLINE\"}"
+  },
+  {
+    "eventId": "SF_CONT_002_2025091702",
+    "eventType": "CONTRACT_SIGNED",
+    "customerId": "0031700000ABC124",
+    "accountId": "0011700000DEF457",
+    "contractId": "CONT-2025-091701-002",
+    "timestamp": "2025-09-17T10:15:00Z",
+    "sourceSystem": "SALESFORCE",
+    "eventData": "{\"contractNumber\":\"CONT-2025-091701-002\",\"customerName\":\"Carlos Rodríguez\",\"contractType\":\"PREPAGO\",\"plan\":\"Plan Joven 20GB\",\"initialCredit\":50.00,\"currency\":\"USD\",\"signatureDate\":\"2025-09-17T10:15:00Z\",\"signatureMethod\":\"DIGITAL\",\"status\":\"ACTIVE\",\"channel\":\"STORE\"}"
+  },
+  {
+    "eventId": "SF_CONT_003_2025091703",
+    "eventType": "CONTRACT_TERMINATED",
+    "customerId": "0031700000ABC125",
+    "accountId": "0011700000DEF458",
+    "contractId": "CONT-2025-091701-003",
+    "timestamp": "2025-09-17T10:30:00Z",
+    "sourceSystem": "SALESFORCE",
+    "eventData": "{\"contractNumber\":\"CONT-2025-091701-003\",\"customerName\":\"Ana López\",\"contractType\":\"POSTPAGO_EMPRESARIAL\",\"plan\":\"Plan Empresarial 100GB\",\"monthlyFee\":99.99,\"currency\":\"USD\",\"terminationDate\":\"2025-09-17T10:30:00Z\",\"terminationReason\":\"CUSTOMER_REQUEST\",\"status\":\"TERMINATED\",\"earlyTerminationFee\":150.00}"
+  }
+]

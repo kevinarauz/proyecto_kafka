@@ -1,0 +1,32 @@
+[
+  {
+    "eventId": "SF_ORD_001_2025091701",
+    "eventType": "ORDER_CREATED",
+    "customerId": "0031700000ABC123",
+    "accountId": "0011700000DEF456",
+    "orderId": "ORD-2025-091701-001",
+    "timestamp": "2025-09-17T09:00:00Z",
+    "sourceSystem": "SALESFORCE",
+    "eventData": "{\"orderNumber\":\"ORD-2025-091701-001\",\"customerName\":\"María García\",\"products\":[{\"code\":\"PLAN_FAM_50GB\",\"name\":\"Plan Familiar 50GB\",\"price\":49.99,\"quantity\":1},{\"code\":\"SMARTPHONE_SAM_A54\",\"name\":\"Samsung Galaxy A54\",\"price\":399.99,\"quantity\":1}],\"totalAmount\":449.98,\"currency\":\"USD\",\"channel\":\"ONLINE\",\"status\":\"PENDING_ACTIVATION\"}"
+  },
+  {
+    "eventId": "SF_ORD_002_2025091702",
+    "eventType": "ORDER_ACTIVATED",
+    "customerId": "0031700000ABC124",
+    "accountId": "0011700000DEF457",
+    "orderId": "ORD-2025-091701-002",
+    "timestamp": "2025-09-17T09:15:00Z",
+    "sourceSystem": "SALESFORCE",
+    "eventData": "{\"orderNumber\":\"ORD-2025-091701-002\",\"customerName\":\"Carlos Rodríguez\",\"products\":[{\"code\":\"PLAN_JOVEN_20GB\",\"name\":\"Plan Joven 20GB\",\"price\":29.99,\"quantity\":1}],\"totalAmount\":29.99,\"currency\":\"USD\",\"channel\":\"STORE\",\"status\":\"ACTIVATED\",\"activationDate\":\"2025-09-17T09:15:00Z\",\"lineNumber\":\"0987654321\"}"
+  },
+  {
+    "eventId": "SF_ORD_003_2025091703",
+    "eventType": "ORDER_CANCELLED",
+    "customerId": "0031700000ABC125",
+    "accountId": "0011700000DEF458",
+    "orderId": "ORD-2025-091701-003",
+    "timestamp": "2025-09-17T09:30:00Z",
+    "sourceSystem": "SALESFORCE",
+    "eventData": "{\"orderNumber\":\"ORD-2025-091701-003\",\"customerName\":\"Ana López\",\"products\":[{\"code\":\"TABLET_SAMSUNG_TAB_A8\",\"name\":\"Samsung Tab A8\",\"price\":199.99,\"quantity\":1}],\"totalAmount\":199.99,\"currency\":\"USD\",\"channel\":\"CALL_CENTER\",\"status\":\"CANCELLED\",\"cancellationReason\":\"CUSTOMER_REQUEST\",\"refundAmount\":199.99}"
+  }
+]

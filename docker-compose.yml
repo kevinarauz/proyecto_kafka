@@ -15,35 +15,131 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
-    container_name: kafka
+    container_name: kafka-transforma-ecuador
     depends_on:
       - zookeeper
     ports:
       - "9092:9092"
+      - "9999:9999"  # JMX para monitoreo
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+      KAFKA_JMX_PORT: 9999
+      KAFKA_JMX_HOSTNAME: localhost
     volumes:
       - kafka-data:/var/lib/kafka/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     depends_on:
       - kafka
+      - zookeeper
     ports:
       - "8081:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    restart: unless-stopped
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.0
+    container_name: logstash
+    depends_on:
+      - kafka
+      - elasticsearch
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./logstash/config:/usr/share/logstash/pipeline
+      - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+
+  microservicio-eventos:
+    build:
+      context: ./microservicio-eventos
+      dockerfile: Dockerfile
+    container_name: microservicio-eventos
+    depends_on:
+      - kafka
+      - zookeeper
+    ports:
+      - "8082:8082"
+    environment:
+      # Configuración de Kafka
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: microservicio-eventos-group
+
+      # Configuración de base de datos H2
+      SPRING_DATASOURCE_URL: jdbc:h2:mem:transforma_ecuador
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_H2_CONSOLE_ENABLED: true
+
+      # Configuración de logging
+      LOGGING_LEVEL_COM_CLARO_ECUADOR_EVENTOS: DEBUG
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_KAFKA: INFO
+
+      # Configuración de aplicación
+      SPRING_APPLICATION_NAME: transforma-eventos-microservicio
+      SERVER_PORT: 8082
+
+      # Información del proyecto
+      INFO_APP_NAME: "Transforma Ecuador - Microservicio Eventos"
+      INFO_APP_DESCRIPTION: "Microservicio para procesamiento de eventos Salesforce"
+      INFO_APP_VERSION: "1.0.0"
+      INFO_APP_TEAM: "Global HITSS"
+      INFO_APP_CLIENT: "Claro Ecuador"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
 volumes:
   zookeeper-data:
   zookeeper-logs:
   kafka-data:
+  elasticsearch-data:

@@ -1,0 +1,29 @@
+[
+  {
+    "eventId": "SF_CUST_001_2025091701",
+    "eventType": "CUSTOMER_CREATED",
+    "customerId": "0031700000ABC123",
+    "accountId": "0011700000DEF456",
+    "timestamp": "2025-09-17T08:00:00Z",
+    "sourceSystem": "SALESFORCE",
+    "eventData": "{\"firstName\":\"María\",\"lastName\":\"García\",\"email\":\"maria.garcia@email.com\",\"phone\":\"0991234567\",\"cedula\":\"1714567890\",\"city\":\"Quito\",\"province\":\"Pichincha\",\"segment\":\"Postpago\",\"plan\":\"Plan Familiar 50GB\"}"
+  },
+  {
+    "eventId": "SF_CUST_002_2025091702",
+    "eventType": "CUSTOMER_UPDATED",
+    "customerId": "0031700000ABC124",
+    "accountId": "0011700000DEF457",
+    "timestamp": "2025-09-17T08:15:00Z",
+    "sourceSystem": "SALESFORCE",
+    "eventData": "{\"firstName\":\"Carlos\",\"lastName\":\"Rodríguez\",\"email\":\"carlos.rodriguez@email.com\",\"phone\":\"0987654321\",\"cedula\":\"1798765432\",\"city\":\"Guayaquil\",\"province\":\"Guayas\",\"segment\":\"Prepago\",\"plan\":\"Plan Joven 20GB\",\"changeType\":\"PLAN_UPGRADE\"}"
+  },
+  {
+    "eventId": "SF_CUST_003_2025091703",
+    "eventType": "CUSTOMER_DEACTIVATED",
+    "customerId": "0031700000ABC125",
+    "accountId": "0011700000DEF458",
+    "timestamp": "2025-09-17T08:30:00Z",
+    "sourceSystem": "SALESFORCE",
+    "eventData": "{\"firstName\":\"Ana\",\"lastName\":\"López\",\"email\":\"ana.lopez@email.com\",\"phone\":\"0976543210\",\"cedula\":\"1756789012\",\"city\":\"Cuenca\",\"province\":\"Azuay\",\"segment\":\"Postpago\",\"plan\":\"Plan Empresarial 100GB\",\"deactivationReason\":\"VOLUNTARY_CANCELLATION\"}"
+  }
+]
