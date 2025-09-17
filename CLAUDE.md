@@ -4,7 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-Este es un proyecto de configuración de Apache Kafka usando Docker Compose, diseñado para desarrollo y pruebas. La arquitectura incluye:
+**IMPORTANTE:** Este es el proyecto "TRANSFORMA ECUADOR" para CLARO ECUADOR. NO es un setup genérico de Kafka.
+
+### Contexto del Proyecto
+- **Cliente:** Claro Ecuador
+- **Proyecto:** Interfaz de eventos Salesforce → Sistemas Legados
+- **Propósito:** Modernización de integraciones corporativas
+
+### Arquitectura Local (Desarrollo)
+El Docker Compose actual simula la arquitectura empresarial objetivo:
 
 - **Kafka Broker** (puerto 9092): Servidor principal de mensajería
 - **Zookeeper** (puerto 2181): Coordinador del cluster Kafka (arquitectura tradicional)
@@ -96,3 +104,25 @@ Para eliminar todos los datos y empezar desde cero:
 docker-compose down -v
 docker-compose up -d
 ```
+
+## Project Context (IMPORTANTE)
+
+Este proyecto forma parte de "TRANSFORMA ECUADOR" para Claro.
+
+### Arquitectura Empresarial Objetivo
+```
+Salesforce → F5 LB (10.38.2.88:9092) → Kafka REST Proxy → Kafka Cluster → Connectors → [DB/Elasticsearch]
+```
+
+### Componentes Pendientes de Implementación
+1. **Sink Connector:** errors.events → dbcri21.conecel.com
+2. **Logstash Connector:** Events → Elasticsearch (10.57.106.55/59:9243)
+3. **Kafka REST Proxy:** Para recibir POST de Salesforce
+4. **Integración con APIGEE:** Entorno de desarrollo
+
+### Stakeholders Clave
+- **TIC William Alejandro** (Claro): Validación de infraestructura
+- **TIC Karla Avendaño** (Claro): Coordinación APIGEE
+- **Equipo HITSS:** Implementación técnica
+
+**Siempre consultar [CONTEXTO_PROYECTO.md](CONTEXTO_PROYECTO.md) antes de modificaciones importantes.**

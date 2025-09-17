@@ -1,6 +1,7 @@
-# Proyecto Kafka
+# TRANSFORMA ECUADOR - Interfaz de Eventos
 
-Configuración de Apache Kafka con Docker Compose para desarrollo y pruebas.
+Proyecto de integración Salesforce → Kafka → Sistemas Legados para **CLARO ECUADOR**.
+Configuración de Apache Kafka con Docker Compose para desarrollo del proyecto "Transforma Ecuador".
 
 ## Servicios Incluidos
 
@@ -95,8 +96,30 @@ docker-compose down
 docker-compose down -v
 ```
 
-## Documentación
+## Documentación del Proyecto
 
+### Documentación Técnica
+- [Contexto del Proyecto](CONTEXTO_PROYECTO.md) - **LEER PRIMERO**
 - [Documentación de levantamiento](levantamiento-kafka.md)
+- [Configuración de Claude Code](CLAUDE.md)
+
+### Referencias Externas
 - [Docker Compose oficial](https://docs.docker.com/compose/)
 - [Apache Kafka Docs](https://kafka.apache.org/documentation/)
+
+## Contexto Empresarial
+
+**⚠️ IMPORTANTE:** Este NO es un proyecto genérico de Kafka. Es una implementación específica para **CLARO ECUADOR** del proyecto "Transforma Ecuador".
+
+### Arquitectura Objetivo
+```
+Salesforce → REST Proxy → Kafka Cluster → [Connectors] → [DB/Elasticsearch]
+```
+
+### Componentes Empresariales
+- **F5 Load Balancer** (10.38.2.88:9092)
+- **Kafka REST Proxy** (recibe POST de Salesforce)
+- **Sink Connector** → `dbcri21.conecel.com`
+- **Logstash Connector** → Elasticsearch (10.57.106.55/59:9243)
+
+Ver [CONTEXTO_PROYECTO.md](CONTEXTO_PROYECTO.md) para detalles completos.
