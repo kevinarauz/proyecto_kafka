@@ -1,0 +1,27 @@
+# Docker
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Kafka data (if running locally)
+kafka-data/
+zookeeper-data/
+zookeeper-logs/
+
+# Backup files
+*.bak
+*.backup
