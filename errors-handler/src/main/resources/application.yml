@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: errors-handler
+
+  kafka:
+    bootstrap-servers: kafka:29092
+    consumer:
+      group-id: errors-handler-group
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  elasticsearch:
+    rest:
+      uris: http://elasticsearch:9200
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: alerts@claro-ecuador.com
+    password: ${MAIL_PASSWORD:defaultpassword}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 8084
+
+logging:
+  level:
+    com.claro.ecuador.errors: INFO
+    org.springframework.kafka: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%logger{36}] - %msg%n"
+
+# Configuración específica para manejo de errores
+error-handler:
+  retry:
+    max-attempts: 3
+    backoff-delay: 5000
+  alert:
+    critical-threshold: 10
+    email-recipients:
+      - ops-team@claro-ecuador.com
+      - tech-lead@claro-ecuador.com

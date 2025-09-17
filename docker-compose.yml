@@ -43,6 +43,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+    networks:
+      - kafka-network
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -95,48 +97,106 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
 
-  microservicio-eventos:
+  # ========================================
+  # MICROSERVICIOS POR TOPIC ESPECÍFICO
+  # ========================================
+
+  # Microservicio 1: back-logstash-connect (Topic: back-logstash-connect)
+  back-logstash-connect:
     build:
-      context: ./microservicio-eventos
+      context: ./back-logstash-connect
       dockerfile: Dockerfile
-    container_name: microservicio-eventos
+    container_name: back-logstash-connect
     depends_on:
       - kafka
-      - zookeeper
+      - elasticsearch
     ports:
       - "8082:8082"
     environment:
-      # Configuración de Kafka
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      SPRING_KAFKA_CONSUMER_GROUP_ID: microservicio-eventos-group
-
-      # Configuración de base de datos H2
-      SPRING_DATASOURCE_URL: jdbc:h2:mem:transforma_ecuador
-      SPRING_DATASOURCE_USERNAME: sa
-      SPRING_DATASOURCE_PASSWORD: password
-      SPRING_H2_CONSOLE_ENABLED: true
-
-      # Configuración de logging
-      LOGGING_LEVEL_COM_CLARO_ECUADOR_EVENTOS: DEBUG
-      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_KAFKA: INFO
-
-      # Configuración de aplicación
-      SPRING_APPLICATION_NAME: transforma-eventos-microservicio
+      # Configuración específica para topic back-logstash-connect
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: back-logstash-connect-group
+      SPRING_APPLICATION_NAME: back-logstash-connect
+      SPRING_ELASTICSEARCH_REST_URIS: http://elasticsearch:9200
       SERVER_PORT: 8082
-
-      # Información del proyecto
-      INFO_APP_NAME: "Transforma Ecuador - Microservicio Eventos"
-      INFO_APP_DESCRIPTION: "Microservicio para procesamiento de eventos Salesforce"
-      INFO_APP_VERSION: "1.0.0"
-      INFO_APP_TEAM: "Global HITSS"
-      INFO_APP_CLIENT: "Claro Ecuador"
+      JAVA_OPTS: "-Xmx256m -Xms128m"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8082/actuator/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 60s
+    networks:
+      - kafka-network
+
+  # Microservicio 2: events-processor (Topic: Events)
+  events-processor:
+    build:
+      context: ./events-processor
+      dockerfile: Dockerfile
+    container_name: events-processor
+    depends_on:
+      - kafka
+      - elasticsearch
+    ports:
+      - "8083:8083"
+    environment:
+      # Configuración específica para topic Events
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: events-processor-group
+      SPRING_APPLICATION_NAME: events-processor
+      SPRING_ELASTICSEARCH_REST_URIS: http://elasticsearch:9200
+      SERVER_PORT: 8083
+      JAVA_OPTS: "-Xmx256m -Xms128m"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8083/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - kafka-network
+
+  # Microservicio 3: errors-handler (Topic: errors.events)
+  errors-handler:
+    build:
+      context: ./errors-handler
+      dockerfile: Dockerfile
+    container_name: errors-handler
+    depends_on:
+      - kafka
+      - elasticsearch
+    ports:
+      - "8084:8084"
+    environment:
+      # Configuración específica para topic errors.events
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: errors-handler-group
+      SPRING_APPLICATION_NAME: errors-handler
+      SPRING_ELASTICSEARCH_REST_URIS: http://elasticsearch:9200
+      SERVER_PORT: 8084
+      JAVA_OPTS: "-Xmx256m -Xms128m"
+      # Configuración de alertas por email
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: alerts@claro-ecuador.com
+      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD:-defaultpassword}
+      ERROR_HANDLER_ALERT_CRITICAL_THRESHOLD: 10
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8084/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - kafka-network
+
+networks:
+  kafka-network:
+    driver: bridge
 
 volumes:
   zookeeper-data:

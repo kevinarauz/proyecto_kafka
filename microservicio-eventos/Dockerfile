@@ -44,4 +44,4 @@ ENV LOGGING_LEVEL_ROOT=INFO
 ENV LOGGING_LEVEL_COM_CLARO=DEBUG
 
 # Comando para ejecutar la aplicación
-CMD ["java", "-jar", "-Xmx512m", "-Xms256m", "target/transforma-eventos-1.0.0.jar"]
+CMD ["java", "-jar", "-Xmx512m", "-Xms256m", "target/back-logstash-connect-1.0.0.jar"]

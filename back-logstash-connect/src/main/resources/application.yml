@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: back-logstash-connect
+
+  kafka:
+    bootstrap-servers: kafka:29092
+    consumer:
+      group-id: back-logstash-connect-group
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  elasticsearch:
+    rest:
+      uris: http://elasticsearch:9200
+
+server:
+  port: 8082
+
+logging:
+  level:
+    com.claro.ecuador.logstash: INFO
+    org.springframework.kafka: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%logger{36}] - %msg%n"

@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: transforma-eventos-microservicio
+    name: back-logstash-connect
 
   # Configuración de base de datos H2 (desarrollo)
   datasource:
@@ -29,7 +29,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: microservicio-eventos-group
+      group-id: back-logstash-connect-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -46,6 +46,25 @@ spring:
       properties:
         linger.ms: 1
         buffer.memory: 33554432
+
+  # Configuración de Elasticsearch
+  elasticsearch:
+    rest:
+      uris: http://elasticsearch:9200
+      username: # No configurado (acceso abierto)
+      password: # No configurado (acceso abierto)
+      connection-timeout: 10s
+      read-timeout: 10s
+
+# Configuración personalizada de Elasticsearch
+elasticsearch:
+  host: elasticsearch
+  port: 9200
+  index:
+    name: transforma-eventos-logs
+    settings:
+      number_of_shards: 1
+      number_of_replicas: 0
 
 # Configuración de logging
 logging:
@@ -72,8 +91,8 @@ management:
 # Información de la aplicación
 info:
   app:
-    name: Transforma Ecuador - Microservicio Eventos
-    description: Microservicio para procesamiento de eventos Salesforce
+    name: Back Logstash Connect - Transforma Ecuador
+    description: Backend de conexión entre Kafka y Logstash para eventos Salesforce
     version: 1.0.0
     team: Global HITSS
     client: Claro Ecuador

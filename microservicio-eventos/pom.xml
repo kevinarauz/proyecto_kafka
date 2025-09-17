@@ -6,12 +6,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.claro.ecuador</groupId>
-    <artifactId>transforma-eventos</artifactId>
+    <artifactId>back-logstash-connect</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>Transforma Ecuador - Microservicio Eventos</name>
-    <description>Microservicio para procesamiento de eventos Salesforce</description>
+    <name>Back Logstash Connect - Transforma Ecuador</name>
+    <description>Backend de conexión entre Kafka y Logstash para eventos Salesforce</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -87,6 +87,18 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Elasticsearch para logs -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+        </dependency>
+
+        <!-- Cliente REST para Elasticsearch -->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
         </dependency>
     </dependencies>
 
