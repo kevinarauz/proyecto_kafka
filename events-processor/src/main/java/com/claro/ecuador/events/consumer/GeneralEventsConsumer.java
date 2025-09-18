@@ -57,7 +57,7 @@ public class GeneralEventsConsumer {
     /**
      * Lógica específica para eventos generales
      */
-    private void processGeneralEvent(String message) {
+    private void processGeneralEvent(String message) throws Exception {
         try {
             logger.info("🔧 Procesando evento general del sistema");
 

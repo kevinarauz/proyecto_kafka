@@ -39,7 +39,7 @@ public class ErrorEventsConsumer {
     @Value("${error-handler.alert.critical-threshold:10}")
     private int criticalThreshold;
 
-    @Value("#{'${error-handler.alert.email-recipients}'.split(',')}")
+    @Value("#{'${error-handler.alert.email-recipients:ops-team@claro-ecuador.com,tech-lead@claro-ecuador.com}'.split(',')}")
     private List<String> alertRecipients;
 
     // Contadores de errores por tipo
@@ -77,7 +77,7 @@ public class ErrorEventsConsumer {
     /**
      * Lógica específica para procesamiento de eventos de error
      */
-    private void processErrorEvent(String message) {
+    private void processErrorEvent(String message) throws Exception {
         try {
             logger.info("🔧 Analizando evento de error para alertas y métricas");
 
